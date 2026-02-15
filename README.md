@@ -1,6 +1,7 @@
----
 
 # Linux User and Directory Management for Cloud Infrastructure
+
+---
 
 ## Overview
 
@@ -8,13 +9,11 @@ This project demonstrates core Linux system administration skills required for c
 
 The setup simulates a real-world company environment where **access control and organized file systems** are essential for security and operational efficiency.
 
----
 
 ## Role
 
 **Cloud Engineer**
 
----
 
 ## Objectives
 
@@ -26,7 +25,6 @@ The primary goals of this task are to:
 * Configure secure access permissions
 * Apply best practices for Linux access control
 
----
 
 ## Tasks Performed
 
@@ -49,7 +47,6 @@ The primary goals of this task are to:
 * Restricted access to sensitive directories
 * Ensured users only access authorized resources
 
----
 
 ## Tools and Commands Used
 
@@ -73,7 +70,6 @@ The primary goals of this task are to:
 * `nano`
 * `less`
 
----
 
 ## Expected Outcome
 
@@ -82,24 +78,20 @@ The primary goals of this task are to:
 * Clean directory hierarchy aligned with cloud infrastructure standards
 * Demonstrated competency in Linux system administration
 
----
 
 ## Screenshots
 
 Relevant screenshots documenting user creation, group assignment, and directory permissions are included in the `screenshots/` directory.
 
----
 
 ## Author
 
 **Eunice Abieyuwa Igbinedion**
 
----
 
 ### Notes
 
 This project reflects practical Linux administration tasks commonly performed by cloud engineers in enterprise and cloud-based environments.
 
----
 
 

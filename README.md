@@ -1,97 +1,132 @@
 
-# Linux User and Directory Management for Cloud Infrastructure
+# Payville Inc. Linux Infrastructure Setup
+
+## Project Overview
+
+This project demonstrates Linux system administration skills by creating users, groups, and secure company directories for Payville Inc. Proper role-based access control (RBAC) is implemented using Linux users, groups, and permissions following enterprise best practices.
 
 ---
 
-## Overview
+## Company Staff and Roles
 
-This project demonstrates core Linux system administration skills required for cloud infrastructure environments. The focus is on **user management, group configuration, directory structure creation, and permission control** using standard Linux commands.
+| Employee  | Role                   |
+| --------- | ---------------------- |
+| Andrew    | System Administrator   |
+| Julius    | Legal                  |
+| Chizi     | Human Resource Manager |
+| Jeniffer  | Sales Manager          |
+| Adeola    | Business Strategist    |
+| Bach      | CEO                    |
+| Gozie     | IT Intern              |
+| Ogochukwu | Finance Manager        |
 
-The setup simulates a real-world company environment where **access control and organized file systems** are essential for security and operational efficiency.
+---
 
+## Step 1: Create Groups
 
-## Role
+```bash
+groupadd admin
+groupadd legal
+groupadd hr
+groupadd sales
+groupadd strategy
+groupadd executive
+groupadd it
+groupadd finance
+```
 
-**Cloud Engineer**
+---
 
+## Step 2: Create Users and Assign Groups
 
-## Objectives
+```bash
+useradd -m -G admin andrew
+useradd -m -G legal julius
+useradd -m -G hr chizi
+useradd -m -G sales jeniffer
+useradd -m -G strategy adeola
+useradd -m -G executive bach
+useradd -m -G it gozie
+useradd -m -G finance ogochukwu
+```
 
-The primary goals of this task are to:
+Set passwords:
 
-* Create and manage Linux users
-* Assign users to appropriate groups
-* Build a structured company directory hierarchy
-* Configure secure access permissions
-* Apply best practices for Linux access control
+```bash
+passwd andrew
+passwd julius
+passwd chizi
+passwd jeniffer
+passwd adeola
+passwd bach
+passwd gozie
+passwd ogochukwu
+```
 
+---
 
-## Tasks Performed
+## Step 3: Create Company Directories
 
-### 1. User and Group Management
+```bash
+mkdir -p /company/{finance_budgets,contract_documents,business_projections,business_models,employee_data,vision_mission,server_scripts}
+```
 
-* Created multiple company users
-* Assigned users to relevant groups based on role
-* Verified group membership
+---
 
-### 2. Directory Structure Setup
+## Step 4: Assign Group Ownership
 
-* Created departmental directories for company operations
-* Organized directories based on functional roles
-* Ensured a logical and scalable directory hierarchy
+```bash
+chown :finance /company/finance_budgets
+chown :legal /company/contract_documents
+chown :strategy /company/business_projections
+chown :strategy /company/business_models
+chown :hr /company/employee_data
+chown :executive /company/vision_mission
+chown :admin /company/server_scripts
+```
 
-### 3. Permissions and Access Control
+---
 
-* Configured file and directory permissions using `chmod`
-* Assigned ownership using `chown`
-* Restricted access to sensitive directories
-* Ensured users only access authorized resources
+## Step 5: Set Permissions
 
+```bash
+chmod 770 /company/finance_budgets
+chmod 770 /company/contract_documents
+chmod 770 /company/business_projections
+chmod 770 /company/business_models
+chmod 770 /company/employee_data
+chmod 750 /company/vision_mission
+chmod 700 /company/server_scripts
+```
 
-## Tools and Commands Used
+---
 
-### User & Group Management
+## Step 6: Verification Commands
 
-* `useradd`
-* `groupadd`
-* `usermod`
+```bash
+id andrew
+getent group
+ls -l /company
+```
 
-### Directory Management
+---
 
-* `mkdir`
-* `ls`
-* `tree`
+## Screenshots Included
 
-### Permissions & File Handling
+* Created users and groups
+* Company directory structure
+* Directory permissions and ownership
 
-* `chmod`
-* `chown`
-* `cat`
-* `nano`
-* `less`
+---
 
+## Tools Used
 
-## Expected Outcome
+* Linux (Ubuntu)
+* Bash Shell
+* Git & GitHub
 
-* A secure and well-organized Linux system
-* Proper role-based access control
-* Clean directory hierarchy aligned with cloud infrastructure standards
-* Demonstrated competency in Linux system administration
-
-
-## Screenshots
-
-Relevant screenshots documenting user creation, group assignment, and directory permissions are included in the `screenshots/` directory.
-
+---
 
 ## Author
 
-**Eunice Abieyuwa Igbinedion**
-
-
-### Notes
-
-This project reflects practical Linux administration tasks commonly performed by cloud engineers in enterprise and cloud-based environments.
-
-
-
+Eunice Abieyuwa Igbinedion

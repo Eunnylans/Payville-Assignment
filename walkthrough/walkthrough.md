@@ -1,59 +1,54 @@
-# Walkthrough
-
-# Linux User & Directory Management – Cloud Infrastructure Setup
-
-> **Role:** Cloud Engineer  
-> **Task:** Create company users, assign groups, create directories, and configure access permissions.
 
 ---
 
-## 📋 Table of Contents
-
-1. [Overview](#overview)
-2. [Step 1 – Create Groups](#step-1--create-groups)
-3. [Step 2 – Create Users & Assign Groups](#step-2--create-users--assign-groups)
-4. [Step 3 – Verify Users & Groups](#step-3--verify-users--groups)
-5. [Step 4 – Create Company Files](#step-4--create-company-files)
-6. [Step 5 – Set Ownership & Permissions](#step-5--set-ownership--permissions)
-7. [Step 6 – Verify Permissions](#step-6--verify-permissions)
-8. [Screenshots](#screenshots)
+# 💻 Payville Inc. Linux Infrastructure Setup – Detailed Walkthrough
 
 ---
 
-## Overview
+## 1️⃣ **Project Overview**
 
-The following employees and their roles were provisioned on the server:
+This project demonstrates Linux administration skills by:
 
-| Employee     | Role                     | Group          |
-|--------------|--------------------------|----------------|
-| Andrew       | System Administrator     | `sysadmin`     |
-| Julius       | Legal                    | `legal`        |
-| Chizi        | Human Resource Manager   | `hr`           |
-| Jeniffer     | Sales Manager            | `sales`        |
-| Adeola       | Business Strategist      | `strategy`     |
-| Bach         | CEO                      | `management`   |
-| Gozie        | IT Intern                | `it`           |
-| Ogochukwu    | Finance Manager          | `finance`      |
+* Creating users and assigning them to appropriate groups
+* Setting up company directories for each department
+* Assigning the correct permissions for role-based access control (RBAC)
+* Documenting the infrastructure for submission to GitHub
 
-The following company files were created and secured:
-
-| File                        | Owner         | Group        | Permission |
-|-----------------------------|---------------|--------------|------------|
-| `finance_budgets`           | `ogochukwu`   | `finance`    | `760`      |
-| `contract_documents`        | `julius`      | `legal`      | `760`      |
-| `business_projections`      | `adeola`      | `strategy`   | `760`      |
-| `business_models`           | `adeola`      | `strategy`   | `760`      |
-| `employee_data`             | `chizi`       | `hr`         | `760`      |
-| `vision_mission_statement`  | `bach`        | `management` | `760`      |
-| `server_config_scripts`     | `andrew`      | `sysadmin`   | `770`      |
-
-> **CEO Access:** Bach was added to all groups so he inherits each group's permissions across all files.
+**Goal:** Simulate a real-world enterprise setup for a small company.
 
 ---
 
-## Step 1 – Create Groups
+## 2️⃣ **Employees and Roles**
 
-Each department/role was assigned a Linux group.
+| Employee  | Role                   |
+| --------- | ---------------------- |
+| Andrew    | System Administrator   |
+| Julius    | Legal                  |
+| Chizi     | Human Resource Manager |
+| Jeniffer  | Sales Manager          |
+| Adeola    | Business Strategist    |
+| Bach      | CEO                    |
+| Gozie     | IT intern              |
+| Ogochukwu | Finance Manager        |
+
+---
+
+## 3️⃣ **Groups to Create**
+
+| Group      | Purpose                              |
+| ---------- | ------------------------------------ |
+| sysadmin   | System Administrators (full control) |
+| legal      | Legal Department                     |
+| hr         | Human Resources                      |
+| sales      | Sales Department                     |
+| strategy   | Business Strategy                    |
+| management | CEO & Executives                     |
+| it         | IT Intern                            |
+| finance    | Finance Department                   |
+
+---
+
+## 4️⃣ **Step 1 – Create Groups**
 
 ```bash
 sudo groupadd sysadmin
@@ -66,187 +61,184 @@ sudo groupadd it
 sudo groupadd finance
 ```
 
-> **Verify groups were created:**
+✅ **Verification:**
+
 ```bash
-cat /etc/group | grep -E "sysadmin|legal|hr|sales|strategy|management|it|finance"
+getent group | egrep "sysadmin|legal|hr|sales|strategy|management|it|finance"
+```
+
+📸 **Screenshot:** `screenshots/groups.png`
+
+---
+
+## 5️⃣ **Step 2 – Create Users and Assign Groups**
+
+```bash
+sudo useradd -m -G sysadmin Andrew
+sudo useradd -m -G legal Julius
+sudo useradd -m -G hr Chizi
+sudo useradd -m -G sales Jeniffer
+sudo useradd -m -G strategy Adeola
+sudo useradd -m -G management Bach
+sudo useradd -m -G it Gozie
+sudo useradd -m -G finance Ogochukwu
+```
+
+Set passwords for each:
+
+```bash
+sudo passwd Andrew
+sudo passwd Julius
+sudo passwd Chizi
+sudo passwd Jeniffer
+sudo passwd Adeola
+sudo passwd Bach
+sudo passwd Gozie
+sudo passwd Ogochukwu
+```
+
+✅ **Verification:**
+
+```bash
+id Andrew Julius Chizi Jeniffer Adeola Bach Gozie Ogochukwu
+```
+
+📸 **Screenshot:** `screenshots/users.png`
+
+---
+
+## 6️⃣ **Step 3 – Create Company Directories**
+
+Create the main `payville` workspace:
+
+```bash
+mkdir -p ~/assignment1/payville/{Finance\ Budgets,Contract\ Documents,Business\ Projections,Business\ Models,Employee\ Data,Company\ Vision\ and\ Mission\ Statement,Server\ Configuration\ Script}
 ```
 
 ---
 
-## Step 2 – Create Users & Assign Groups
-
-Each user was created with a home directory and immediately assigned to their respective group.
+## 7️⃣ **Step 4 – Assign Ownership (chown)**
 
 ```bash
-# Andrew – System Administrator
-sudo useradd -m -G sysadmin andrew
-sudo passwd andrew
-
-# Julius – Legal
-sudo useradd -m -G legal julius
-sudo passwd julius
-
-# Chizi – Human Resource Manager
-sudo useradd -m -G hr chizi
-sudo passwd chizi
-
-# Jeniffer – Sales Manager
-sudo useradd -m -G sales jeniffer
-sudo passwd jeniffer
-
-# Adeola – Business Strategist
-sudo useradd -m -G strategy adeola
-sudo passwd adeola
-
-# Bach – CEO (primary group: management, added to all groups for full access)
-sudo useradd -m -G management bach
-sudo passwd bach
-
-sudo usermod -aG finance bach
-sudo usermod -aG legal bach
-sudo usermod -aG hr bach
-sudo usermod -aG sales bach
-sudo usermod -aG strategy bach
-sudo usermod -aG sysadmin bach
-sudo usermod -aG it bach
-
-# Gozie – IT Intern
-sudo useradd -m -G it gozie
-sudo passwd gozie
-
-# Ogochukwu – Finance Manager
-sudo useradd -m -G finance ogochukwu
-sudo passwd ogochukwu
-```
-
-> **Flag explanation:**  
-> `-m` → creates a home directory at `/home/<username>`  
-> `-G` → assigns the user to a supplementary group  
-> `-aG` → appends the user to an additional group without removing existing ones
-
----
-
-## Step 3 – Verify Users & Groups
-
-```bash
-# List all created users
-cat /etc/passwd | grep -E "andrew|julius|chizi|jeniffer|adeola|bach|gozie|ogochukwu"
-
-# Confirm group memberships
-id andrew
-id julius
-id chizi
-id jeniffer
-id adeola
-id bach
-id gozie
-id ogochukwu
+sudo chown :finance ~/assignment1/payville/Finance\ Budgets
+sudo chown :legal ~/assignment1/payville/Contract\ Documents
+sudo chown :strategy ~/assignment1/payville/Business\ Projections
+sudo chown :strategy ~/assignment1/payville/Business\ Models
+sudo chown :hr ~/assignment1/payville/Employee\ Data
+sudo chown :management ~/assignment1/payville/Company\ Vision\ and\ Mission\ Statement
+sudo chown :sysadmin ~/assignment1/payville/Server\ Configuration\ Script
 ```
 
 ---
 
-## Step 4 – Create Company Files
-
-All company document files were created using the `touch` command.
+## 8️⃣ **Step 5 – Set Permissions (chmod)**
 
 ```bash
-sudo touch finance_budgets
-sudo touch contract_documents
-sudo touch business_projections
-sudo touch business_models
-sudo touch employee_data
-sudo touch vision_mission_statement
-sudo touch server_config_scripts
+chmod 770 ~/assignment1/payville/Finance\ Budgets
+chmod 770 ~/assignment1/payville/Contract\ Documents
+chmod 770 ~/assignment1/payville/Business\ Projections
+chmod 770 ~/assignment1/payville/Business\ Models
+chmod 770 ~/assignment1/payville/Employee\ Data
+chmod 750 ~/assignment1/payville/Company\ Vision\ and\ Mission\ Statement
+chmod 700 ~/assignment1/payville/Server\ Configuration\ Script
 ```
 
-> **Verify files were created:**
-```bash
-ls -l
-```
+✅ **Why these permissions?**
+
+* **770** → owner + group have full access; others none (department-specific directories)
+* **750** → owner + group can access; others cannot (CEO vision file)
+* **700** → only owner (sysadmin) can access (server scripts)
 
 ---
 
-## Step 5 – Set Ownership & Permissions
-
-Each file was assigned to its group manager as owner. The `760` permission grants the owner full access (rwx), group members read/write access (rw-), and blocks all others. The `server_config_scripts` file uses `770` so Gozie (IT intern) can also execute scripts.
+## 9️⃣ **Step 6 – Verify Ownership & Permissions**
 
 ```bash
-# Finance Budgets → owned by ogochukwu, group: finance
-sudo chown ogochukwu:finance finance_budgets
-sudo chmod 760 finance_budgets
-
-# Contract Documents → owned by julius, group: legal
-sudo chown julius:legal contract_documents
-sudo chmod 760 contract_documents
-
-# Business Projections → owned by adeola, group: strategy
-sudo chown adeola:strategy business_projections
-sudo chmod 760 business_projections
-
-# Business Models → owned by adeola, group: strategy
-sudo chown adeola:strategy business_models
-sudo chmod 760 business_models
-
-# Employee Data → owned by chizi, group: hr
-sudo chown chizi:hr employee_data
-sudo chmod 760 employee_data
-
-# Vision & Mission Statement → owned by bach, group: management
-sudo chown bach:management vision_mission_statement
-sudo chmod 760 vision_mission_statement
-
-# Server Config Scripts → owned by andrew, group: sysadmin (770 for IT intern execute access)
-sudo chown andrew:sysadmin server_config_scripts
-sudo chmod 770 server_config_scripts
+ls -ld ~/assignment1/payville/*
 ```
 
-> **Permission breakdown:**  
-> `760` → Owner: `rwx` | Group: `rw-` | Others: `---`  
-> `770` → Owner: `rwx` | Group: `rwx` | Others: `---` *(used for server_config_scripts so Gozie can execute)*
+📸 **Screenshot:** `screenshots/permissions.png`
 
-> **CEO Access:** Bach was added to all groups via `usermod -aG`, so he automatically inherits the group permissions of every file — no ACL needed.
-
----
-
-## Step 6 – Verify Permissions
+Optional numeric verification:
 
 ```bash
-# Check ownership and permissions for all files
-ls -la
-
-# Confirm Bach's group memberships (should show all groups)
-id bach
+stat -c "%n %a %U %G" ~/assignment1/payville/*
 ```
 
 ---
 
-## Screenshots
+## 10️⃣ **Step 7 – Optional: Tree View for Hierarchy**
 
-### Users Created
-![Users Created](adduser.png)
+```bash
+tree ~/assignment1/payville
+```
 
-### Groups Created
-![Groups Created](getent-group.png)
-
-### Changing Group Ownership
-![Chgrp Files](chgrp-files.png)
-
-### Changing File Ownership
-![Chown of File](chown-of-file.png)
-
-### Directory Permissions
-![Permissions](permissions.png)
+📸 **Screenshot:** `screenshots/tree.png`
 
 ---
 
-## Summary
+## 11️⃣ **Step 8 – GitHub Submission**
 
-- ✅ **8 users** created with home directories and secure passwords
-- ✅ **8 groups** created matching company departments/roles
-- ✅ **7 company files** created using `touch`
-- ✅ Each file owned by the group manager (e.g. `ogochukwu` for finance)
-- ✅ Permissions set to `760` for all files — group members get read/write, no execute
-- ✅ `server_config_scripts` set to `770` — IT intern (Gozie) gets full rwx access
-- ✅ CEO (Bach) added to all groups via `usermod -aG` — no ACL required
+### 11.1 Initialize Git
 
+```bash
+cd ~/assignment1
+git init
+```
 
+### 11.2 Add README & Screenshots
+
+```bash
+git add README.md screenshots/
+git commit -m "Add Payville Inc Linux infrastructure setup"
+```
+
+### 11.3 Connect to Remote Repo
+
+```bash
+git branch -M main
+git remote add origin https://github.com/Eunnylans/Linux-user-group-access-control.git
+```
+
+### 11.4 Push
+
+```bash
+git push -u origin main
+```
+
+---
+
+## 12️⃣ **README.md Structure**
+
+Include:
+
+1. **Project overview**
+2. **Employee list + groups**
+3. **Commands used for users, groups, directories**
+4. **Ownership & permissions verification**
+5. **Screenshots embedded**
+6. **Optional notes on permissions and RBAC**
+
+**Example screenshot embedding in README:**
+
+```md
+![Users](screenshots/users.png)
+![Groups](screenshots/groups.png)
+![Permissions](screenshots/permissions.png)
+![Directory Tree](screenshots/tree.png)
+```
+
+---
+
+## ✅ 13️⃣ **Checklist for Submission**
+
+* [X] Users created ✅
+* [X] Groups created ✅
+* [X] Directories created ✅
+* [X] Ownership assigned ✅
+* [X] Permissions set correctly ✅
+* [X] Screenshots captured ✅
+* [X] README.md documented ✅
+* [X] GitHub repository pushed ✅
+
+---
